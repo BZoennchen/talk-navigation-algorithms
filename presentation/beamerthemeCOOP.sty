@@ -1,0 +1,52 @@
+\ProvidesPackage{beamerthemeCOOP}
+\input{ColorDefinitions}
+
+\mode<presentation>
+%% shadow, font, color, outer, inner
+%% normal text, alerted text, example text, structure
+
+%\useoutertheme{split}
+\setbeamercolor{normal text}{fg=black,bg=white}
+\setbeamercolor{alerted text}{fg=myorange,bg=white}
+\setbeamercolor{example text}{fg=mygreen,bg=white}
+\setbeamercolor{structure}{fg=myblue,bg=white}
+\setbeamercolor{titlelike}{fg=myblue}
+\setbeamercolor{subtitle}{fg=black}
+\setbeamerfont{title}{series=\bfseries}
+
+\setbeamertemplate{sections/subsections in toc}[default]
+\setbeamertemplate{items}[default]
+%\setbeamertemplate{navigation symbols}[only frame symbol]
+
+\setbeamertemplate{blocks}[default]
+
+%\setbeamercolor{block title}        {use=normal text, fg=black,bg=tumlightblue}
+\setbeamercolor{block title}        {use=structure}
+\setbeamercolor{block title alerted}{use=alerted text,fg=white,bg=alerted text.fg}
+%\setbeamercolor{block title example}{use=example text,fg=white,bg=example text.fg}
+\setbeamercolor{block title example}{use=example text}
+\setbeamercolor{block algorithm}{use=example text, fg=black,bg=myblue2}
+
+\setbeamercolor{block body}        {parent=normal text,use=block title,        bg=block title.bg!25!bg}
+\setbeamercolor{block body alerted}{parent=normal text,use=block title alerted,bg=block title.bg!25!bg}
+\setbeamercolor{block body example}{parent=normal text,use=block title example,bg=block title example.bg!15!bg}
+
+\setbeamertemplate{navigation symbols}{}
+\setbeamertemplate{sidebar left}{}
+%\setbeamertemplate{footline}{\hspace{15cm}\vspace{0.5cm}\usebeamerfont{footline}\insertframenumber{}/\inserttotalframenumber}
+
+
+\newcommand{\Ffootline}{%
+	\normalsize%\insertsection % The left end of the footline
+	\hfill
+	%\textit{Moo} % The center
+	\hfill
+	{\color{mydarkgray}\insertframenumber/\inserttotalframenumber}} % And the right end
+
+\setbeamertemplate{footline}{%
+	\usebeamerfont{footline}%\usebeamerfont{structure}
+	\begin{beamercolorbox}[wd=\paperwidth,ht=2.25ex,dp=3ex]{title in head/foot}%
+		\Tiny\hspace*{4mm} \Ffootline \hspace{4mm}
+\end{beamercolorbox}}
+
+\mode<all>

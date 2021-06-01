@@ -1,0 +1,29 @@
+\frametitle{Navigation im $\mathbb{R}^2$:  FMM}
+	\begin{algorithm}[H]
+		%\KwIn{triangulation $\mesh$, spatial destination $\osmDestination$, spatial domain $\domain$}
+		%\KwOut{$\eikonalApp_\osmDestination$ solution of \cref{eq:eikonal:repeat}}
+		$T(\uu) \leftarrow 0$ for all $\uu \in \osmDestination$\;
+		$T(\uu) \leftarrow \infty$ for all $\uu \notin \osmDestination$\;
+		$\mathcal{B} \leftarrow \emptyset$ \tcp{von Welle bereits verlassene Punkte}
+
+		$\mathcal{Q} \leftarrow \left\{ (\uu, T(\uu)) \mid \uu \in \osmDestination \right\}$ \tcp{von der Welle erreichte Punkte}
+		%	\ForEach{$\vvv \in \osmDestination$}{
+		%		$\mathcal{H} \leftarrow \mathcal{H} \cup (\vvv, \eikonal_\osmDestination(\vvv))$\;
+		%	}
+		\While{$\mathcal{Q} \neq \emptyset$}{ \label{alg:navi:fmm:while}
+			$(\uu, T(\uu)) \leftarrow \mathcal{Q}.\textsc{pop}()$\;
+			\ForEach{neighbor $\vvv$ of $\uu$ with $\vvv \not\in \mathcal{B}$}{
+				$T(\vvv) \leftarrow$ \textsc{SolveEikonal}($\vvv$)\;
+				\eIf{$(\vvv, T(\vvv)) \in \mathcal{Q}$}{
+					$\mathcal{Q}.\textsc{decrease}(\vvv, T(\vvv))$\;
+				}
+				{
+					$\mathcal{Q}.\textsc{push}(\vvv, T(\vvv))$\;
+				}
+			}
+			%$\mathcal{Q} \leftarrow \mathcal{Q} \setminus \{(\uu, T(\uu))\}$\;
+			$\mathcal{B} \leftarrow \mathcal{B} \cup \{ \uu \}$\;
+		}
+		\textbf{return} $T$\;
+		%\caption{\textsc{FastMarchingMethod}} \label{alg:navi:fmm}
+	\end{algorithm}

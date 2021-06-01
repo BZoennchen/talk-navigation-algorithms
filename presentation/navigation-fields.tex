@@ -1,0 +1,760 @@
+\documentclass[aspectratio=169,ngerman]{beamer}
+\usepackage{beamerthemeCOOP}
+\input{packages}
+%\usepackage[utf8]{inputenc}
+\usepackage{hyperref}
+
+\usepackage{etoolbox}% http://ctan.org/pkg/etoolbox
+\usepackage{array}
+\AtBeginEnvironment{figure}{\setcounter{subfigure}{0}}
+
+\usepackage{pbox}
+\usepackage[export]{adjustbox}
+
+\input{meta}
+\input{commands}
+\input{ColorDefinitions}
+
+%%% Title page %%%
+%\defbeamertemplate*{title page}{customized}[1][]
+%{
+%	\usebeamerfont{title}\inserttitle\par
+%	\usebeamerfont{subtitle}\usebeamercolor[fg]{subtitle}\insertsubtitle\par
+%	\bigskip
+%	\usebeamerfont{author}\insertauthor\par
+%	\usebeamerfont{institute}\insertinstitute\par
+%	\usebeamerfont{date}\insertdate\par
+%	\usebeamercolor[fg]{titlegraphic}\inserttitlegraphic
+%}
+\title{{\huge Algorithmen der Navigation}}
+%\subtitle{\vspace{0.25cm}\large Die \textsc{FastMarchingMethod}\vspace{-0.25cm}}
+\author{\href{mailto:zoennchen.benedikt@hm.edu}{Benedikt Zönnchen}} 
+\date{2. Juni 2021}
+\institute{\vspace{0.25cm}%
+	\Large%
+	%Hochschule München\\ \vspace{5mm}%
+	\includegraphics[height=20pt]{./figs/logo/Hochschule_Muenchen_Logo}}
+%%% End Title page %%%
+\setbeamercovered{transparent}
+
+\begin{document}
+\begin{frame}[plain]
+ \titlepage
+\end{frame}
+
+\section{Problemstellung}
+\begin{frame}
+	\frametitle{Navigation im $\mathbb{R}^2$}
+	\begin{figure}
+		\centering
+		\includegraphics[width=0.4\textwidth]{./figs/wayfinding.pdf}
+	\end{figure}
+\end{frame}
+
+\begin{frame}
+	\frametitle{Navigation im $\mathbb{R}^2$}
+	Sei
+	\begin{equation*}
+		d_{\osmDestination}(\xx) = \min_{\yy \in \osmDestination} \Vert \xx - \yy \Vert
+	\end{equation*}
+	der Euklidische Abstand zwischen $\xx$ und dem Ziel $\osmDestination$.\\
+	\vspace{0.5cm}
+	Falls es keine Hindernisse in dem Gebiet gibt können wir einfach entlang von $-\nabla d_{\osmDestination}$ laufen:
+	\begin{figure}
+		\subfigure[Folge $-\nabla d_{\osmDestination}$]{\includegraphics[width=0.45\textwidth]{./figs/euclid.pdf}}
+		\hfill
+		\subfigure[Folge ?]{\includegraphics[width=0.45\textwidth]{./figs/chicken.pdf}}
+	\end{figure}
+\end{frame}
+
+
+\begin{frame}[plain]
+	\begin{center}
+		{\color{myblue} \huge Navigation auf dem Gitter (Graphen)}
+	\end{center}
+\end{frame}
+
+\begin{frame}
+	\frametitle{Navigation auf dem Gitter}
+	Sei $\domain \subset \mathbb{Z}^2$ ein zusammenhängende räumlicher Bereich, $\osmDestination \subset \mathbb{Z}^2$ ein Zielgebiet und $\uu \in \domain$ eine bestimmte Position, dann suchen wir nach einer Sequenz von Positionen $\uu_0, \ldots, \uu_m \in \domain$, sodass
+	\begin{equation*}
+		\uu_0 = \uu \text{ und } \uu_m \in \osmDestination.
+	\end{equation*}
+	\begin{figure}
+		\centering
+		\includegraphics[width=0.4\textwidth]{./figs/wayfinding-in-Z.pdf}
+	\end{figure}
+	\uncover<2>{Zudem muss für alle $i > 0$, $\uu_{i}$ zu einer Nachbarschaft von $\uu_{i-1}$ gehört (Nebenbedingung).}
+	%Wir suchen nach einer Sequenz die einen Agenten von seiner aktuellen Position $\xx$ zu seinem Ziel $\osmDestination$ bewegt.
+\end{frame}
+
+\begin{frame}
+	\frametitle{Navigation auf dem Gitter: Nachbarschaft}
+	\begin{figure}
+		\subfigure[Von Neumann]{\includegraphics[width=0.20\textwidth]{./figs/neumann-nh.pdf}}
+		\hspace{3cm}
+		\subfigure[Moore]{\includegraphics[width=0.20\textwidth]{./figs/moore-nh.pdf}}
+	\end{figure}
+\end{frame}
+
+\begin{frame}
+	\frametitle{Navigation auf dem Gitter}
+	Sei $d_{\osmDestination}(\uu)$ die Länge des kürzesten Wegs von $\uu$ zum Ziel $\osmDestination$ auf dem Gitter.\\
+	\vspace{1cm}
+	\begin{figure}
+		\subfigure[Folge dem kürzesten Weg]{\includegraphics[width=0.45\textwidth]{./figs/euclid-in-Z.pdf}}
+		\hfill
+		\subfigure[Folge dem kürzesten Weg]{\includegraphics[width=0.45\textwidth]{./figs/chicken-in-Z.pdf}}
+	\end{figure}
+\end{frame}
+
+\begin{frame}[plain]
+	\begin{center}
+		{\color{myblue} \huge Navigation auf dem Gitter (Graphen): Dijkstra's Algorithmus}
+	\end{center}
+\end{frame}
+
+\begin{frame}
+	\frametitle{Navigation auf dem Gitter: Dijkstra's Algorithmus}
+	\textbf{Strategie}: Berechne kürzeste Wege von $\Gamma$ zu jedem Gitterpunkt $\uu \in \domain$ durch den \textsc{Dijkstra} \cite{dijkstra-1959}.\\
+	\vspace{1cm}
+	
+	\uncover<2>{\textbf{Beobachtung}: Ist $\uu_0, \ldots, \uu_k$ der kürzeste Weg von $\uu_0$ nach $\uu_k$ und $\uu_k, \ldots, \uu_m$ der kürzeste Weg von $\uu_k$ nach $\uu_m$, dann ist
+	\begin{equation*}
+		\uu_0, \ldots, \uu_m
+	\end{equation*}
+	der kürzeste Weg von $\uu_0$ nach $\uu_m$.}
+\end{frame}
+
+\begin{frame}
+	\frametitle{Navigation auf dem Gitter: Dijkstra's Algorithmus}
+	\textbf{Definitionen}: 
+	\begin{enumerate}[label=(\roman*)]
+		\uncover<2->{\item $\uu, \vvv$, Knoten des Gitters}
+		\uncover<3->{\item $d_{\osmDestination}(\uu)$, gesuchte Länge des kürzesten Wegs von $\uu$ nach $\osmDestination$}
+		\uncover<4->{\item $d(\uu, \vvv)$, Länge/Gewicht der Kante $(\uu, \vvv)$}
+		\uncover<5->{\item $\mathcal{Q}$, eine \textsc{PriorityQueue} (z.B. \textsc{FibonacciHeap})}
+	\end{enumerate}
+\end{frame}
+
+\begin{frame}
+	\frametitle{Navigation auf dem Gitter: Dijkstra's Algorithmus}
+	
+\end{frame}
+
+\begin{frame}[fragile]
+	\frametitle{Navigation auf dem Gitter: Dijkstra's Algorithmus}
+		\begin{columns}
+		\begin{column}{0.4\textwidth}
+			{ \scriptsize
+			\begin{algorithm}[H]
+			\KwIn{$\uu^*$ start position}
+			$d_{\osmDestination}(\uu) \leftarrow 0$ for all $\uu \in \osmDestination$\;
+			$d_{\osmDestination}(\uu) \leftarrow \infty$ for all $\uu \not\in \osmDestination$\;
+			$\mathcal{Q} \leftarrow \left\{ (\uu, d_{\osmDestination}(\uu)) \in \osmDestination \right\}$\;
+			\While{$\mathcal{Q} \neq \emptyset$}{
+				$(\uu, d_{\osmDestination}(\uu)) \leftarrow \mathcal{Q}.\textsc{pop()}$\;
+				\If{$\uu = \uu^*$}{
+					\textbf{return} $d_{\osmDestination}$\;
+				}
+				\ForEach{neighbour $\vvv$ of $\uu$}{
+					$uv \leftarrow d_{\osmDestination}(\uu) + d(\uu, \vvv)$\;
+					\If{$uv < d_{\osmDestination}(\vvv))$}{
+						$d_{\osmDestination}(\vvv) \leftarrow uv$\;
+						\eIf{$(\vvv, d_{\osmDestination}(\vvv)) \in \mathcal{Q}$}{
+							$\mathcal{Q}.\textsc{decrease}(\vvv, d_{\osmDestination}(\vvv))$\;
+						}
+						{
+							$\mathcal{Q}.\textsc{push}(\vvv, d_{\osmDestination}(\vvv))$\;
+						}
+					}
+				}
+			}
+			\textbf{return} $d_{\osmDestination}$\;
+		\end{algorithm}
+		}
+		\end{column}
+		\begin{column}{0.6\textwidth}
+			\uncover<2->{$\mathcal{Q}$ ist eine nach \alert{$d_{\osmDestination}(\vvv)$} sortierte \textsc{PriorityQueue}:  
+			\begin{enumerate}[label=$\bullet$]
+				\item $\mathcal{Q}.\textsc{pop}()$, wirft das kleinste Element heraus 
+				\item und $\mathcal{Q}.\textsc{decrease}(\vvv, d_{\osmDestination}(\vvv))$ ändert ein Element ab.
+			\end{enumerate}}
+			\vspace{1cm}
+			\uncover<3->{\textbf{Komplexität:} (einfacher Graph mit positiven Kosten und $n$ Knoten)
+			\begin{enumerate}[label=$\bullet$]
+				\item Zeit: $\mathcal{O}(n\log(n))$
+				\item Speicher: $\mathcal{O}(n)$
+			\end{enumerate}}
+			%\textbf{Invarianz}: Für alle $\xx \in \domain$, die nicht in $\mathcal{Q}$ enthalten sind, ist $d_{\osmDestination}(\xx)$ ist der kürzeste Pfad von $\xx$ nach $\osmDestination$. 
+		\end{column}
+	\end{columns}
+\end{frame}
+
+
+\begin{frame}
+	\frametitle{Navigation auf dem Gitter: Dijkstra's Algorithmus}
+	\textbf{Strategie}: \textbf{Strategie}: Berechne kürzeste Wege von $\Gamma$ zu jedem Gitterpunkt $\uu \in \domain$ durch den \textsc{Dijkstra} \cite{dijkstra-1959}.\\
+	
+	\vspace{1cm}
+	
+	\textbf{Beobachtung}: Ist $\uu_0, \ldots, \uu_k$ der kürzeste Weg von $\uu_0$ nach $\uu_k$ und $\uu_k, \ldots, \uu_m$ der kürzeste Weg von $\uu_k$ nach $\uu_m$, dann ist
+	\begin{equation*}
+		\uu_0, \ldots, \uu_m
+	\end{equation*}
+	der kürzeste Weg von $\uu_0$ nach $\uu_m$.\\
+	\vspace{1cm}
+	
+	\uncover<2->{\textbf{Invarianz}: Für alle $\uu \in \domain$, die nicht in $\mathcal{Q}$ enthalten sind, ist $d_{\osmDestination}(\uu)$ ist der kürzeste Pfad von $\uu$ nach $\osmDestination$. (Beweis über Induktion)}
+\end{frame}
+
+\begin{frame}[plain]
+	\begin{center}
+		{\color{myblue} \huge Navigation auf dem Gitter (Graphen):\\Der A$^*$ Algorithmus}
+	\end{center}
+\end{frame}
+
+\begin{frame}
+	\frametitle{Navigation auf dem Gitter: A$^*$ Algorithmus}
+	\textbf{Strategie}: Berechne gerichtet/informiert die kürzesten Wege von $\Gamma$ zu Gitterpunkt $\uu \in \domain$. Spare dir unnötige Berechnungen (\textsc{A$^*$} \cite{hart-1968})\\
+	\vspace{1cm}
+	
+	\uncover<2->{\textbf{Beobachtung (1)}: Kein Weg $\uu_0, \ldots, \uu_m$ ist nicht kürzer als der euklidische Abstand zwischen $\uu_0$ und $\uu_m$, d.h. 
+	\begin{equation*}
+		\Vert \uu_0 - \uu_m\Vert \leq \sum_{i=0}^{m-1} d(\uu_i, \uu_{i+1}),
+	\end{equation*}}
+	\uncover<3->{\textbf{Beobachtung (2)}: Aus 
+	\begin{equation*}
+		d_\osmDestination(\vvv) + \Vert \uu - \vvv  \Vert > d_\osmDestination(\uu)
+	\end{equation*}
+	folgt, dass der kürzeste Weg vom Ziel zu $\uu$ nicht über $\vvv$ geht (selbst wenn $d_\osmDestination(\vvv) \leq d_\osmDestination(\uu)$).}
+\end{frame}
+
+\begin{frame}
+	\frametitle{Navigation auf dem Gitter: A$^*$ Algorithmus}	
+		\vspace{-0.5cm}
+		\begin{columns}
+		\begin{column}{0.4\textwidth}
+			\begin{figure}
+			\centering
+			\includegraphics[width=0.8\textwidth]{./figs/a-star-obs.pdf}
+		\end{figure}
+		\end{column}
+		\hfill
+		\begin{column}{0.4\textwidth}
+			\uncover<2->{Sei 
+			\begin{equation*}
+				h(\uu) = \min_{\vvv \in \osmDestination} \Vert \uu - \vvv \Vert,
+			\end{equation*}
+			dann gilt 
+			\begin{equation*}
+				h(\uu) - h(\vvv) \leq \Vert \vvv - \uu \Vert.
+			\end{equation*}}
+		\end{column}
+	\end{columns}
+	\vspace{0.5cm}
+	
+	\uncover<3->{\textbf{Beobachtung (2*)}: Aus 
+	\begin{equation*}
+		d_\osmDestination(\vvv) + h(\uu) - h(\vvv) > d_\osmDestination(\uu)
+	\end{equation*}
+	folgt, dass der kürzeste Weg vom Ziel zu $\uu$ nicht über $\vvv$ geht (selbst wenn $d_\osmDestination(\vvv) \leq d_\osmDestination(\uu)$).}
+\end{frame}
+
+\begin{frame}[fragile]
+	\frametitle{Navigation auf dem Gitter: A$^*$ Algorithmus}
+	\begin{columns}
+		\begin{column}{0.4\textwidth}
+			{\scriptsize
+			\begin{algorithm}[H]
+				\KwIn{$\uu^*$ start position, \alert{$h$ heuristik}}
+				$d_{\osmDestination}(\uu) \leftarrow 0, \forall \uu \in \osmDestination$\;
+				$d_{\osmDestination}(\uu) \leftarrow \infty, \forall \uu \not\in \osmDestination$\;
+				\tcc{\alert{sortiert nach $d_{\osmDestination}(\uu) + h(\uu)$}}
+				$\mathcal{Q} \leftarrow \left\{ (\uu, d_{\osmDestination}(\uu)) \in \osmDestination \right\}$\;
+				\While{$\mathcal{Q} \neq \emptyset$}{
+					$(\uu, d_{\osmDestination}(\uu)) \leftarrow \mathcal{Q}.\textsc{pop()}$\;
+					\If{$\uu = \uu^*$}{
+						\textbf{return} $d_{\osmDestination}$\;
+					}
+					\ForEach{neighbour $\vvv$ of $\uu$}{
+						$uv \leftarrow d_{\osmDestination}(\uu) + d(\uu, \vvv)$\;
+						\If{$uv < d_{\osmDestination}(\vvv))$}{
+							$d_{\osmDestination}(\vvv) \leftarrow uv$\;
+							\eIf{$(\vvv, d_{\osmDestination}(\vvv)) \in \mathcal{Q}$}{
+								$\mathcal{Q}.\textsc{decrease}(\vvv, d_{\osmDestination}(\vvv))$\;
+							}
+							{
+								$\mathcal{Q}.\textsc{push}(\vvv, d_{\osmDestination}(\vvv))$\;
+							}
+						}
+					}
+				}
+				\textbf{return} $d_{\osmDestination}$\;
+			\end{algorithm}
+		
+		}
+		\end{column}
+		\begin{column}{0.6\textwidth}
+			\uncover<2->{$\mathcal{Q}$ ist eine nach \alert{$d_{\osmDestination}(\vvv) + h(\vvv)$} sortierte \textsc{PriorityQueue}:
+			\begin{enumerate}[label=$\bullet$]
+				\item $\mathcal{Q}.\textsc{pop}()$, wirft das kleinste Element heraus,
+				\item $\mathcal{Q}.\textsc{decrease}(\vvv, d_{\osmDestination}(\vvv))$ ändert ein Element ab, 
+				\item und $\mathcal{Q}.\textsc{push}(\vvv, d_{\osmDestination}(\vvv))$ fügt ein Element ein.
+			\end{enumerate}}
+			\vspace{1cm}
+			\uncover<3->{\textbf{Komplexität:} (einfacher Graph mit positiven Kosten und $n$ Knoten)
+			\begin{enumerate}[label=$\bullet$]
+				\item Zeit: $\mathcal{O}(n\log(n))$
+				\item Speicher: $\mathcal{O}(n)$
+			\end{enumerate}}
+			%\textbf{Invarianz}: Für alle $\xx \in \domain$, die nicht in $\mathcal{Q}$ enthalten sind, ist $d_{\osmDestination}(\xx)$ ist der kürzeste Pfad von $\xx$ nach $\osmDestination$. 
+		\end{column}
+	\end{columns}
+\end{frame}
+
+\begin{frame}
+	\frametitle{Navigation auf dem Gitter: A$^*$ Algorithmus}	
+	\textbf{Heuristik}: Es muss nicht der euklidische Abstand als Heuristik genommen werden. Doch falls 
+	\begin{equation*}
+		\begin{split}
+			\uncover<2->{h(\uu) & \leq d_{\osmDestination}(\uu) \quad \quad \quad \ \  \text{ (zulässig)}}\\
+			\uncover<3->{h(\uu) & \leq d(\uu, \vvv) + h(\vvv) \text{ (monoton)}}
+		\end{split}
+	\end{equation*}
+	\uncover<4->{für jede Konten $\uu$, bzw. jede Kante $(\uu, \vvv)$ gilt (\textbf{Konsistenz}), so findet der A$^*$ Algorithmus garantiert den optimalen Pfad ohne Knoten mehrfach zu besuchen.}\\
+	\vspace{1cm}
+	\uncover<5->{\textbf{Verlorener Vorteil}: Müssen Sie ohnehin für jeden Knoten den kürzesten Pfad zum Ziel berechnen, bringt der A$^*$ keinen Vorteil gegenüber dem \textsc{Dijkstra}.}
+\end{frame}
+
+\begin{frame}[plain]
+	\begin{center}
+		{\color{myblue} \huge Navigation im $\mathbb{R}^2$}
+	\end{center}
+\end{frame}
+
+\section{Problemstellung}
+\begin{frame}
+	\frametitle{Navigation im $\mathbb{R}^2$}
+	Sei $\domain \subset \mathbb{R}^2$ ein zusammenhängender räumlicher Bereich, $\osmDestination \subset \mathbb{R}^2$ ein Zielgebiet und $\xx \in \domain$ eine bestimmte Position, dann suchen wir nach einer Sequenz von Positionen $\xx_0, \ldots, \xx_m \in \domain$, sodass
+	\begin{equation*}
+		\xx_0 = \xx \text{ und } \xx_m \in \osmDestination.
+	\end{equation*}
+	\begin{figure}
+		\centering
+		\includegraphics[width=0.4\textwidth]{./figs/wayfinding.pdf}
+	\end{figure}
+\end{frame}
+
+\begin{frame}
+	\frametitle{Navigation im $\mathbb{R}^2$}
+	Sei $d_{\osmDestination}(\xx) = \min_{\yy \in \osmDestination} \Vert \xx - \yy \Vert$ die Euklidische Distanz zwischen $\xx$ und dem Ziel $\osmDestination$.\\
+	\vspace{1cm}
+	Falls es keine Hindernisse in dem Gebiet gibt können wir einfach entlang von $-\nabla d_{\osmDestination}$ laufen:
+	\begin{figure}
+		\subfigure[Folge $-\nabla d_{\osmDestination}$]{\includegraphics[width=0.45\textwidth]{./figs/euclid.pdf}}
+		\hfill
+		\subfigure[Folge ?]{\includegraphics[width=0.45\textwidth]{./figs/chicken.pdf}}
+	\end{figure}
+\end{frame}
+
+\begin{frame}[plain]
+	\begin{center}
+		{\color{myblue} \huge Navigation im $\mathbb{R}^2$:\\Die Eikonalgleichung}
+	\end{center}
+\end{frame}
+
+\begin{frame}
+	\frametitle{Navigation im $\mathbb{R}^2$}
+	Wir stellen uns eine \textbf{Wellenfront} vor, die sich mit der \textbf{Reisegeschwindigkeit} $f(\xx) = 1$  vom Ziel $\osmDestination$ über das Gebiet $\domain$ ausbreitet.\\
+	\vspace{0.25cm}
+	
+	\uncover<2->{$T(\xx)$ ist die \textbf{Reisezeit} oder Ankunftszeit der \textbf{Wellenfront} am Ort $\xx$.}
+	
+	\begin{figure}
+		\includegraphics[width=0.6\textwidth]{./figs/chicken-eikonal.pdf}
+	\end{figure}
+	\uncover<3->{Die Änderung der \textbf{Reisezeit} $T$ (über den Ort) ist gleich $1/f$.}
+\end{frame}
+
+\begin{frame}
+	\frametitle{Navigation im $\mathbb{R}^2$}
+	\textbf{Ein eindimensionaler Fall:} Sei $\domain = [-1;1], \osmDestination = \{-1,1\}$.
+	\begin{figure}
+		\includegraphics[width=0.6\textwidth]{./figs/1d-eikonal.pdf}
+	\end{figure}
+	\uncover<2->{$\Rightarrow T(x) = 1 - |x|$, ist die Viskositätslösung der sog. \textbf{Eikonalgleichung}!}
+	
+%	Im $\mathbb{R}$ ist dieser Sachverhalt leicht ersichtlich:
+%	Stellen Sie sich vor Sie laufen (mit der Zeit $t$) auf einer Linie mit der Geschwindigkeit $f = 1$.
+%	\begin{equation*}
+%		\frac{dx}{dt} = df \Rightarrow \frac{dt}{dx} = \frac{1}{df}
+%	\end{equation*}
+%	\begin{center}
+%			'Mit der \textbf{Reisegeschwindigkeit} $f$ von einem Meter pro Sekunde, laufen Sie in einer Sekunden einen Meter'.
+%	\end{center}
+\end{frame}
+
+
+\begin{frame}
+	\frametitle{Navigation im $\mathbb{R}^2$}
+	Wir stellen uns eine \textbf{Wellenfront} vor, die sich mit der \textbf{Reisegeschwindigkeit} $f(\xx) = 1$  vom Ziel $\osmDestination$ über das Gebiet $\domain$ ausbreitet.\\
+	\vspace{0.25cm}
+	
+	$T(\xx)$ ist die \textbf{Reisezeit} oder Ankunftszeit der \textbf{Wellenfront} am Ort $\xx$.
+	
+	\begin{figure}
+		\includegraphics[width=0.6\textwidth]{./figs/chicken-eikonal.pdf}
+	\end{figure}
+	Die Änderung der \textbf{Reisezeit} $T$ (über den Ort) ist gleich $1/f$.
+\end{frame}
+
+\begin{frame}
+	\frametitle{Navigation im $\mathbb{R}^2$}
+	Die \textbf{Wellenfront}, die sich mit der \textbf{Reisegeschwindigkeit} $f(\xx) = 1$  vom Ziel $\osmDestination$ über das Gebiet $\domain$ ausbreitet, wird von der \textbf{Eikonalgleichung} beschrieben:
+	%\begin{block}{Solution of the eikonal equation}
+	\uncover<2->{\begin{equation}
+	\begin{split}
+		\Vert \nabla T(\xx) \Vert \cdot f(\xx) &= 1, \, \xx \in \domain\\
+		T(\xx) &= 0, \ \xx \in \osmDestination\\
+		f(\xx) & \geq 0, \ \xx \in \domain.
+	\end{split}
+	\end{equation}}
+\uncover<3->{\textbf{Bemerkungen:}}
+\begin{enumerate}[label=(\roman*)]
+	\uncover<3->{\item Hyperbolische partzielle Differenzialgleichung}
+	\uncover<4->{\item Randwertproblem ($T = 0 \text{ auf } \osmDestination$)}
+	\uncover<5->{\item Für die Viskositätslösung muss $T$ nicht überall differenzierbar sein}
+	\uncover<6->{\item Gilt $f = 1$, so ist $T$ die \textbf{geodätische Distanz}.}
+\end{enumerate}
+\end{frame}
+
+\begin{frame}[plain]
+	\begin{center}
+		{\color{myblue} \huge Navigation im $\mathbb{R}^2$:\\Die Fast Marching Method (FMM)}
+	\end{center}
+\end{frame}
+
+\begin{frame}
+	\frametitle{Navigation im $\mathbb{R}^2$: FMM}
+	Die \textsc{FastMarchingMethod} \cite{sethian-1999,kimmel-1998} berechnet $T$ auf einer Diskretisierung (hier Gitter) wobei der Algorithmus die \textbf{Wellenfront} 'nachahmt'.\\
+	\vspace{1cm}
+	
+	\uncover<2->{Die Methode arbeitet die Punkte in der gleichen Reihenfolge wie der \textsc{Dijkstra} ab, jedoch sind die Kosten/Distanz die \textbf{Reisezeit} $T(\uu)$.}
+\end{frame}
+
+\begin{frame}
+	\frametitle{Navigation im $\mathbb{R}^2$: FMM}
+	Jeder Gitterpunkt gehört zu genau einer der folgenden Mengen:
+	\begin{enumerate}[label=(\roman*)]
+		\uncover<2->{\item \textit{unerreicht}: 'Die Wellenfront ist noch nicht angekommen'}
+		\uncover<3->{\item \textit{erreicht}: 'Die Wellenfront ist gerade hier'}
+		\uncover<4->{\item \textit{verlassen}: 'Die Wellenfront hat den Punkt verlassen'}
+	\end{enumerate}
+	\begin{figure}
+		\subfigure{\includegraphics[width=0.23\textwidth]{./figs/chicken-fmm-1.pdf}}
+		\hspace{1cm}
+		\subfigure{\includegraphics[width=0.23\textwidth]{./figs/chicken-fmm-2.pdf}}
+		\hspace{1cm}
+		\subfigure{\includegraphics[width=0.23\textwidth]{./figs/chicken-fmm-3.pdf}}
+	\end{figure}
+\end{frame}
+
+\begin{frame}
+	\frametitle{Navigation im $\mathbb{R}^2$: Lokale Lösung}
+	Die \textbf{Wellenfront} erreicht jeden Gitterpunkt $\uu_{i,j}$ von einer bestimmten Richtung:
+	\begin{figure}
+		\includegraphics[width=0.5\textwidth]{./figs/stencil.pdf}
+	\end{figure}
+	Auf einem Gitter berechnen wir die \textbf{Reisezeit} $T(\uu_{i,j})$ anhand des Stencils.
+\end{frame}
+
+\begin{frame}
+	\frametitle{Navigation im $\mathbb{R}^2$:  Lokale Lösung}
+	%	\begin{equation}
+	%		\Vert \nabla T(\xx)\Vert^2 = f(\mathbf{x})^{-2},
+	%	\end{equation}	
+	Wir approximieren $\nabla T$ durch finite Differenzen (Taylor-Expansion):
+	\begin{columns}
+		\begin{column}{0.4\textwidth}
+			\uncover<2->{\begin{equation*}
+			\begin{split}
+				\frac{\partial T(\uu_{i,j}) }{\partial x} &\approx D^{\pm x}_{i,j}\uu = \frac{
+					T(\uu_{i \pm 1,j}) - {\color{myblue} T(\uu_{i,j})} }{\pm \Delta x}\\
+				\frac{\partial T(\uu_{i,j})}{\partial y} &\approx D^{\pm y}_{i,j}\uu = \frac{
+					T(\uu_{i,j \pm 1}) - {\color{myblue} T(\uu_{i,j})} }{\pm \Delta y}.
+			\end{split}
+		\end{equation*}}
+		\end{column}
+		\begin{column}{0.45\textwidth}
+				\begin{figure}
+				\centering
+				\includegraphics[width=0.8\textwidth]{./figs/stencil.pdf}
+			\end{figure}
+		\end{column}
+	\end{columns}
+	\vspace{0.5cm}
+	\uncover<3->{Wüsten wir, dass die Welle von unten rechts kommt bräuchten wir nur 
+	\begin{equation*}
+		D^{+ x}_{i,j}\uu = \frac{
+			T(\uu_{i + 1,j}) - { \color{myblue} T(\uu_{i,j})} }{+ \Delta x} \text{ und } D^{- y}_{i,j}\uu = \frac{
+			T(\uu_{i,j - 1}) - {\color{myblue} T(\uu_{i,j})} }{- \Delta y}.
+	\end{equation*}}
+\end{frame}
+
+\begin{frame}
+	\frametitle{Navigation im $\mathbb{R}^2$:  Lokale Lösung}
+	Wie bestimmen wir nun ${\color{myblue} T(\uu_{i,j})}$?
+	\uncover<2->{\begin{equation}
+		\Vert \nabla T(\xx) \Vert \cdot f(\xx) = 1
+	\end{equation}}
+	\uncover<3->{wird zu
+	\begin{equation}
+		\Vert \nabla T(\xx) \Vert^2 = \frac{1}{f(\xx)^2},
+	\end{equation}}
+	\uncover<4->{wird in unserem Beispiel approximiert durch
+	\begin{equation}
+		(D^{+ x}_{i,j}\uu)^2 + (D^{- y}_{i,j}\uu)^2 = f(\xx_{i,j})^{-2}.
+	\end{equation}
+	Das hei{\ss}t wir lösen die quadratische Gleichung
+	\begin{equation}
+		\left( \frac{ T(\uu_{i + 1,j}) - { \color{myblue} T(\uu_{i,j})} }{+ \Delta x} \right)^2 + \left( \frac{
+			T(\uu_{i,j - 1}) - {\color{myblue} T(\uu_{i,j})} }{- \Delta y} \right)^2 = f(\xx_{i,j})^{-2}
+	\end{equation}
+	nach ${\color{myblue} T(\uu_{i,j})}$.}
+\end{frame}
+
+\begin{frame}
+	\frametitle{Navigation im $\mathbb{R}^2$:  Lokale Lösung}
+	Der wesentliche Unterschied zum \textsc{Dijkstra} ist die Berechnung der \textbf{Reisezeit} $T(\uu)$.
+	\begin{figure}
+		\includegraphics[width=0.6\textwidth]{./figs/eikonal-lokal.pdf}
+	\end{figure}
+\end{frame}
+
+\begin{frame}
+	\frametitle{Navigation im $\mathbb{R}^2$:  Lokale Lösung}
+	Im allgemeinen kennen wir die Richtung aus der die \textbf{Wellenfront} kommt nicht!
+	\uncover<2->{Sie kommt \textbf{entweder} von \alert{oben} oder \alert{unter} UND von \textbf{entweder} \alert{links} oder \alert{rechts}.}\\
+	\vspace{0.25cm}
+	\uncover<3->{\textbf{Unten, rechts:}
+	\begin{equation*}
+		\left( \frac{ T(\uu_{i + 1,j}) - { \color{myblue} T(\uu_{i,j})} }{+ \Delta x} \right)^2 + \left( \frac{
+			T(\uu_{i,j - 1}) - {\color{myblue} T(\uu_{i,j})} }{- \Delta y} \right)^2 = f(\xx_{i,j})^{-2}
+	\end{equation*}}
+
+	\uncover<4->{\textbf{Oben, links:}
+	\begin{equation*}
+		\left( \frac{ T(\uu_{i - 1,j}) - { \color{myblue} T(\uu_{i,j})} }{- \Delta x} \right)^2 + \left( \frac{
+			T(\uu_{i,j + 1}) - {\color{myblue} T(\uu_{i,j})} }{+ \Delta y} \right)^2 = f(\xx_{i,j})^{-2}
+	\end{equation*}}
+	
+	\uncover<5->{Wir gehen davon aus, dass die \textbf{Wellenfront} von der Richtung kommt von der sie auch früher bei $\uu_{i,j}$ eintrifft.}
+\end{frame}
+
+\begin{frame}
+	\frametitle{Navigation im $\mathbb{R}^2$:  Lokale Lösung}
+	Wir gehen davon aus, dass die \textbf{Wellenfront} von der Richtung kommt von der sie auch früher bei $\uu_{i,j}$ eintrifft.\\
+	\vspace{0.5cm}
+	\uncover<2->{Das hei{\ss}t aus
+	\begin{equation*}
+		(D^{+ x}_{i,j}\uu)^2 + (D^{- y}_{i,j}\uu)^2 = f(\xx_{i,j})^{-2}
+	\end{equation*}}
+	\uncover<3->{wird im Allgemeinen	
+	\begin{equation} \label{eq:local:eikonal:2}
+		\max\left\{ D_{i,j}^{-x}\uu, -D_{i,j}^{+x}\uu \right\}^2 + \max\left\{ D_{i,j}^{-y}\uu, -D_{i,j}^{+y}\uu \right\}^2 = f(\uu_{i,j})^{-2}.
+	\end{equation}
+	Wir lösen die Gleichung lokal durch Godunov's Schemata \cite{kimmel-1998,sethian-2000}.}
+\end{frame}
+
+\begin{frame}
+	\frametitle{Navigation im $\mathbb{R}^2$:  Lokale Lösung}
+	%	\begin{equation}
+	%		\Vert \nabla T(\xx)\Vert^2 = f(\mathbf{x})^{-2},
+	%	\end{equation}	
+	Wir können $\nabla T$ durch weitere Taylor-Terme besser approximieren. 
+	\uncover<2->{Zur Erinnerung:
+	\begin{equation}
+			f(x + h) \approx f(x) + h f'(x)  + h^2\frac{f''(x)}{2} \Rightarrow 
+		f'(x) \approx \frac{f(x + h) - f(x)}{h} - \frac{h}{2}f''(x)
+	\end{equation}}
+	\uncover<3->{Für die Approximation der Ableitung von 
+	\begin{equation}
+		D^{\pm x}_{i,j}\uu = \frac{T(\uu_{i \pm 1,j}) - {\color{myblue} T(\uu_{i,j})} }{\pm \Delta x}
+	\end{equation}
+	ergibt sich
+	\begin{equation}
+		(D^{\pm x}_{i,j})'\uu \approx \frac{T(\uu_{i \pm 2,j}) - 2T(\uu_{i \pm 2,j}) - {\color{myblue} T(\uu_{i,j})} }{\pm (\Delta x)^2}.
+	\end{equation}}
+	\uncover<4->{Somit ist 
+	\begin{equation*}
+			\frac{\partial T(\uu_{i,j}) }{\partial x} \approx D^{\pm 2x}_{i,j}\uu = \frac{
+			T(\uu_{i \pm 1,j}) - {\color{myblue} T(\uu_{i,j})} }{\pm \Delta x} + \frac{\Delta x}{2} \frac{T(\uu_{i \pm 2,j})-2 T(\uu_{i \pm 1,j}) - {\color{myblue} T(\uu_{i,j})} }{\pm (\Delta x)^2}
+	\end{equation*}}
+\end{frame}
+
+\begin{frame}
+	\frametitle{Navigation im $\mathbb{R}^2$:  Lokale Lösung}
+	Somit ist 
+	\begin{equation*}
+		\begin{split}
+		\frac{\partial T(\uu_{i,j}) }{\partial x} \approx D^{\pm 2x}_{i,j}\uu &= \frac{
+			T(\uu_{i \pm 1,j}) - {\color{myblue} T(\uu_{i,j})} }{\pm \Delta x} + \frac{\Delta x}{2} \frac{T(\uu_{i \pm 2,j})-2 T(\uu_{i \pm 1,j}) - {\color{myblue} T(\uu_{i,j})} }{\pm (\Delta x)^2} \\
+		&=  \frac{2T(\uu_{i \pm 1,j}) - {\color{myblue} 2T(\uu_{i,j})} }{\pm 2\Delta x} + \frac{T(\uu_{i \pm 2,j})-2 T(\uu_{i \pm 1,j}) - {\color{myblue} T(\uu_{i,j})} }{\pm 2 \Delta x} \\
+		&=  \frac{T(\uu_{i \pm 2,j})- 4 T(\uu_{i \pm 1,j}) - 3{\color{myblue} T(\uu_{i,j})} }{\pm 2 \Delta x}.
+		\end{split}
+	\end{equation*}
+	Und in $y$-Richtung ebenso:
+	\begin{equation*}
+		\frac{\partial T(\uu_{i,j}) }{\partial y} \approx D^{\pm 2y}_{i,j}\uu =  \frac{T(\uu_{i,j\pm 2})- 4 T(\uu_{i,j\pm 1}) - 3{\color{myblue} T(\uu_{i,j})} }{\pm 2 \Delta y}.
+	\end{equation*}
+\end{frame}
+
+\begin{frame}
+	\frametitle{Navigation im $\mathbb{R}^2$}
+	Wir noch immer eine quadratische Gleichung:
+	\begin{equation} \label{eq:lokal:eikonal:1}
+		\max\left\{ D_{i,j}^{-2x}\uu, -D_{i,j}^{+2x}\uu \right\}^2 + \max\left\{D_{i,j}^{-2y}\uu, -D_{i,j}^{+2y}\uu \right\}^2 = f(\uu_{i,j})^{-2}.
+	\end{equation}\\
+	\vspace{0.5cm}
+	\uncover<2->{\textbf{Vorteil:} Bessere Konvergenzrate für feiner werdendes Gitter ($\Delta x, \Delta y \rightarrow 0$), denn 
+	\begin{equation*}
+		f(x + h) = f(x) + h f'(x) + \alert{\mathcal{O}(h^2)} = f(x) + h f'(x) + h^2\frac{f''(x)}{2} + \alert{\mathcal{O}(h^3)}
+	\end{equation*}\\}
+	\vspace{0.5cm}
+	\uncover<3->{\textbf{Nachteil:} Möglicherweise ungewollte Glättung der Singularitäten.}
+\end{frame}
+
+\begin{frame}[fragile]
+	\frametitle{Navigation im $\mathbb{R}^2$:  FMM}
+	\begin{algorithm}[H]
+		%\KwIn{triangulation $\mesh$, spatial destination $\osmDestination$, spatial domain $\domain$}
+		%\KwOut{$\eikonalApp_\osmDestination$ solution of \cref{eq:eikonal:repeat}}
+		$T(\uu) \leftarrow 0$ for all $\uu \in \osmDestination$\;
+		$T(\uu) \leftarrow \infty$ for all $\uu \notin \osmDestination$\;
+		$\mathcal{B} \leftarrow \emptyset$ \tcp{von Welle bereits verlassene Punkte}
+		
+		$\mathcal{Q} \leftarrow \left\{ (\uu, T(\uu)) \mid \uu \in \osmDestination \right\}$ \tcp{von der Welle erreichte Punkte}
+		%	\ForEach{$\vvv \in \osmDestination$}{
+		%		$\mathcal{H} \leftarrow \mathcal{H} \cup (\vvv, \eikonal_\osmDestination(\vvv))$\;
+		%	}
+		\While{$\mathcal{Q} \neq \emptyset$}{ \label{alg:navi:fmm:while}
+			$(\uu, T(\uu)) \leftarrow \mathcal{Q}.\textsc{pop}()$\;
+			\ForEach{neighbor $\vvv$ of $\uu$ with $\vvv \not\in \mathcal{B}$}{
+				$T(\vvv) \leftarrow$ \textsc{SolveEikonal}($\vvv$)\;
+				\eIf{$(\vvv, T(\vvv)) \in \mathcal{Q}$}{
+					$\mathcal{Q}.\textsc{decrease}(\vvv, T(\vvv))$\;
+				}
+				{
+					$\mathcal{Q}.\textsc{push}(\vvv, T(\vvv))$\;
+				}
+			}
+			%$\mathcal{Q} \leftarrow \mathcal{Q} \setminus \{(\uu, T(\uu))\}$\;
+			$\mathcal{B} \leftarrow \mathcal{B} \cup \{ \uu \}$\;
+		}
+		\textbf{return} $T$\;
+		%\caption{\textsc{FastMarchingMethod}} \label{alg:navi:fmm}
+	\end{algorithm}
+\end{frame}
+
+\begin{frame}
+	\frametitle{Navigation im $\mathbb{R}^2$:  FMM}
+	$\mathcal{Q}$ ist eine nach {\color{myblue}$T(\uu)$} sortierte \textsc{PriorityQueue}:
+	\begin{enumerate}[label=$\bullet$]
+		\item $\mathcal{Q}.\textsc{pop}()$, wirft das kleinste Element heraus,
+		\item $\mathcal{Q}.\textsc{decrease}(\uu, T(\uu))$ ändert ein Element ab, 
+		\item und $\mathcal{Q}.\textsc{push}(\uu, T(\uu))$ fügt ein Element ein.
+		\item \textsc{SolveEikonal}($\uu$) berechnet die lokale Lösung aus \cref{eq:lokal:eikonal:1} oder \cref{eq:local:eikonal:2}.
+	\end{enumerate}
+	\vspace{0.5cm}
+	\uncover<2->{\textbf{Komplexität:} (für $n$ Knoten)
+	\begin{enumerate}[label=$\bullet$]
+		\item Zeit: $\mathcal{O}(n\log(n))$
+		\item Speicher: $\mathcal{O}(n)$
+	\end{enumerate}}
+\end{frame}
+
+\begin{frame}
+	\frametitle{Navigation im $\mathbb{R}^2$:  FMM}
+	\textbf{Implementierungstipps:}
+	\begin{enumerate}[label=$\bullet$]
+		\uncover<2->{\item Sie finden eine sehr gute Beschreibung in \cite{baerentzen-2001}.}
+		\uncover<3->{\item Um schnell zu prüfen ob ein Gitterpunkt \textit{unerreicht}, \textit{erreicht}, oder \textit{verlassen} ist verwenden Sie ein \textbf{flag} (keine Mengen).}
+		\uncover<4->{\item Sie können auch Punkte um $\osmDestination$ herum mit z.B. dem Wert der Euklidischen Distanz initialisieren und in $\mathcal{Q}$ einfügen.}
+		\uncover<5->{\item Sie können etwas Performance rausholen, wenn Sie auf $\textsc{decrease}$ verzichten und nur $\textsc{push}$ verwenden (d.h. Sie lassen doppelte Einträge zu $\Rightarrow$ Sie müssen den Algorithmus etwas anpassen, siehe \cite{jones-2006})}
+	\end{enumerate}
+\end{frame}
+
+\begin{frame}
+	\frametitle{Navigation im $\mathbb{R}^2$:  FMM}
+	\textbf{Eigenschaften:}
+	\begin{enumerate}[label=$\bullet$]
+		\item[+] Für alle arten von Wellen ein sehr schneller sequenzieller Algorithmus
+		\item[+] Besonders schnell für 'schmale' Wellen
+		\uncover<2->{\item[-] Schwer zu parallelisieren, Versuche \cite{herrmann-2003,yang-2015}
+		\item[-] Benötigt komplizierte/unstrukturierte \textsc{PriorityQueue}
+		\item[-] Nutzt die Parallelität der Wellenfrontausbreitung nicht aus}
+	\end{enumerate}
+	\vspace{0.25cm}
+	\uncover<3->{\textbf{Alternative Methoden:}
+	\begin{enumerate}[label=$\bullet$]
+		\item \textsc{FastSweepingMethod} \cite{zhao-2005}, nur für sehr 'einfache' Wellen geeignet
+		\item \textsc{FastIterativeMethod} \cite{jeong-2008}, besonders für 'breite' Wellen geeignet
+		\item \textsc{InformedFastIterativeMethod} (meine Dissertation), für wiederholte Berechnungen sich leicht ändernder Wellen geeignet.
+	\end{enumerate}}
+	\uncover<4->{In \cite{capozzoli-2013,gomez-2015} finden Sie Vergleiche verschiedener Methoden.}
+\end{frame}
+
+\begin{frame}[plain]
+	\begin{center}
+		{\color{myblue} \huge Navigation im $\mathbb{R}^2$:\\Modellierung}
+	\end{center}
+\end{frame}
+
+\begin{frame}
+	\frametitle{Navigation im $\mathbb{R}^2$:  Modellierung}
+	Wie erreichen wir, dass Agenten nicht direkt an den Wänden entlang laufen?\\
+	\begin{figure}
+		\includegraphics[width=0.6\textwidth]{./figs/chicken-eikonal.pdf}
+	\end{figure}
+	\uncover<2->{\textbf{Tipp:} Verringern Sie die Reisegeschwindigkeit der Welle $f$ in der Nähe von Hindernissen!}
+\end{frame}
+
+\begin{frame}
+	\frametitle{Navigation im $\mathbb{R}^2$:  Modellierung}
+	Zum Beispiel, sei $d_W(\xx)$ die Euklidische Distanz zum nächstliegenden Hindernis/Wand, dann könnte sich
+	\begin{equation*}
+			f(\xx) = \begin{cases}
+				1 / (2-(d_W(\xx)/ \delta_{W})) & \quad \text{if } d_W(\xx) < \delta_{W} \\
+				1  & \quad \text{else}.
+			\end{cases}
+	\end{equation*}
+	eignen.
+	\begin{figure}
+		\subfigure[$\delta_{W} = 0.2$ Meter]{\includegraphics[width=0.38\textwidth]{./figs/bhm_0_2.pdf}}
+		\hfill
+		\subfigure[$\delta_{W} = 0.5$ Meter]{\includegraphics[width=0.38\textwidth]{./figs/bhm_0_5.pdf}}
+		\hfill
+		\subfigure[$\delta_{W} = 1.0$ Meter]{\includegraphics[width=0.38\textwidth]{./figs/bhm_1_0.pdf}}
+	\end{figure}
+\end{frame}
+
+\begin{frame}
+	\frametitle{Navigation im $\mathbb{R}^2$:  Modellierung}
+	\vspace{-0.5cm}
+	\begin{figure}
+		\subfigure[$T(\xx)$ für $f(\xx) = 1$]{\includegraphics[width=0.43\textwidth]{./figs/reisezeit-hindernis.pdf}}\\
+		\subfigure[$T(\xx)$ für $f(\xx) \leq 1$]{\includegraphics[width=0.43\textwidth]{./figs/reisezeit-hindernis-verlangsamung.pdf}}
+		\hfill
+		\subfigure[$f(\xx) \leq 1$]{\includegraphics[width=0.43\textwidth]{./figs/reisegeschwindigkeit-hindernis-verlangsamung.pdf}}
+	\end{figure}
+\end{frame}
+
+\begin{frame}[allowframebreaks]
+	\frametitle{References}
+	{\scriptsize% dirty fix for the non-chapter bib
+		\bibliographystyle{plainnat}
+		\bibliography{Literature,Lit}}
+\end{frame}
+
+\end{document}

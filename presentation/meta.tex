@@ -1,0 +1,194 @@
+%Meta-Informationen%
+\newcommand{\mytitleGer}{Effiziente parallele Algorithmen zur großskaligen Personenstromsimulation}
+\newcommand{\mytitleEng}{Efficient parallel algorithms for large-scale pedestrian simulation}
+\newcommand{\myfakultaet}{Informatics}
+\newcommand{\myauthor}{Benedikt Sebastian Zönnchen}
+\newcommand{\myvname}{Benedikt}
+\newcommand{\myname}{Zönnchen}
+\newcommand{\myjahr}{2020}
+%\newcommand{\mylogo}{./hm_logo_alt}
+\newcommand{\mydate}{\today}
+
+%\addto\captionsngerman{%
+%\renewcommand{\figurename}{Abb.}%
+%\renewcommand{\tablename}{Tab.}%
+%}
+\graphicspath{{pictures/}}
+\hypersetup{pdfauthor={Benedikt Sebastian Zönnchen}}
+\hypersetup{pdftitle={Efficient parallel algorithms for large-scale pedestrian simulation}}
+
+\newcommand{\shotAbstractEng}{
+The understanding and prevention of catastrophes at large-scale events are of utmost societal importance. 
+For that, pedestrian simulation has proven to be a potent tool.
+Using microscopic pedestrian simulations, researchers and practitioners investigate the mechanisms and preconditions that lead to dangerous situations such as harmful crowd pressures.
+Simulations reveal the behaviors and characteristics of human crowds and suggest practical ways to prevent catastrophes.
+
+However, microscopic pedestrian simulations are computationally expensive.
+Yet, it is necessary to model each individual to predict crucial phenomena.
+Despite their computational cost, real-time simulations are required to make reliable predictions during ongoing events and to enhance a research field that integrates more and more data-driven methods.
+To achieve this temporal requirement, we have to introduce and exploit efficient and parallel algorithms.
+
+In this thesis, I follow the call for efficient and scalable simulations by analyzing existing and introducing new parallel algorithms.
+I introduce parallelism to a class of microscopic models, i.e., optimal steps models, and show that real-time simulations of half a million participants are possible.
+In addition, I develop efficient and parallel algorithms to construct navigation fields: a robust technique to model pedestrian wayfinding.
+A new meshing algorithm reduces the problem size and a novel numerical method exploits similarities of consecutively solved eikonal equations.
+In combination, real-time dynamic navigation field computation becomes possible for many large-scale scenarios.
+}
+
+\newcommand{\shotAbstractGer}{
+Katastrophen inmitten von Großveranstaltungen verstehen und verhindern ist von größter ge\-sell\-schaft\-lich\-er Bedeutung.
+Für diese Aufgabe haben sich Fußgängersimulationen als wirksames Werkzeug bewährt.
+Mit ihrer Hilfe unter\-such\-en Forscher und unmittelbare Anwender die Voraussetzungen und Zusammenhänge, die zu gefährlichen Situationen, wie kritischen Stauungen, führen.
+Aus den gewonnenen Erkenntnissen über das Verhalten und der Bewegung von Fußgängern, können wir praktische Maßnahmen ableiten und dadurch Katastrophen verhindern.
+%Durch die Erkenntnisse, die wir über das Verhalten großer Menschenmengendie aus Simulationen gewinnen, können wir praktische Maßnehmen entwickelt und Katastrophen verhindern.
+
+Mikroskopische Fußgängersimulationen sind jedoch rechenintensiv.
+Um aussagekräftige Vor\-her\-sagen zu erzielen, ist, bis heute, die Modellierung jedes einzelnen Individuums erforderlich.
+%um entscheidende Phä\-no\-me\-ne vorherzusagen
+Trotz des dadurch entstehenden Rechenaufwands, wird der Ruf nach Echtzeitsimulationen immer lauter.
+%Zugleich sind, trotz des entstehenden Rechenaufwands, Echtzeitsimulationen erstrebenswert.
+Einerseits sollen sie die Anwender mit Vorhersagen während einer laufenden Veranstaltung unterstützen.
+%Einerseits sollen sie, bei gerade lauf\-en\-den Er\-eig\-nis\-sen, zuverlässige Vorhersagen ermöglichen.
+Andererseits wür\-den sie ein Forschungsfeld bereichern, welches immer mehr daten\-ge\-trie\-bene Methoden integriert.
+Um diese zeitliche Anforderung zu erfüllen, müssen wir effiziente und parallele Algorithmen für die Be\-rech\-nung von Per\-so\-nen\-strömen entwickeln und nutzen.
+
+In dieser Arbeit folge ich dem Ruf nach effizienten und skalierbaren Simulationen, indem ich vorhandene Algorithmen analysiere und neue parallele Algorithmen entwickle.
+Zunächst führe ich die Parallelität in die sogenannten Optimal Steps Modelle, eine Klasse mikroskopischer Modelle, ein.
+Ich zeige, dass dadurch die Simulation einer halben Million (virtueller) Fuß\-gäng\-er in Echtzeit möglich wird.
+Darüber hinaus entwickle ich effiziente und parallele Algorithmen zur Berechnung von Navigationsfeldern.
+Diese haben sich in der Vergangenheit als robuste Technik zur Modellierung der Weg\-fin\-dung von Fußgängern etabliert.
+Ein neuer Algorithmus zur Netzgenerierung reduziert die Größe des zu berechnenden Problems und eine neuartige numerische Methode nutzt die Ähnlichkeit aufeinanderfolgend gelöster Eikonalgleichungen aus.
+In Kombination wird der Einsatz dynamischer Navigationsfelder für Echtzeitsimulationen für viele große Sze\-na\-rien ermöglicht.
+}
+
+\newcommand{\shotAbstractEngB}{
+In an ever more connected world, large-scale events with millions of participants are culturally significant and offer joy, happiness, and a place where the human spirit can grow. 
+It is sholcing when things go wrong, and joy turns into harm – when our belonging for connection destroys them forever.
+We must learn from accidents of the past, find their causes, and develop mechanisms to prevent them in the future.
+Therefore, we study human behavior supported by microscopic pedestrian simulation.
+Today, real-time simulations are required to predict the future of an ongoing event and to enhance a research field that integrates more and more data-driven methods.
+However, simulations are computationally expensive, and the only way to achieve scalability is parallelization.
+
+In this thesis, I follow the call for efficient and scalable simulations by analyzing existing and introducing new parallel algorithms.
+I introduce parallelism to a class of microscopic models, \ie{}, \OSMs{} and show that real-time simulations of half a million participants is possible.
+In addition, I develop efficient and parallel algorithms to construct navigation fields -- a robust technique to model the wayfinding of pedestrians.
+A new meshing algorithms reduces the problem size and a noval numerical method exploits similarities of consecutive solved eikonal equations.
+In combination real-time dynamic navigation field computation becomes possible for many large-scale scenarios.
+}
+
+\newcommand{\shotAbstractGerB}{
+In einer immer kleiner werdenden Welt, sind Großveranstaltungen mit Millionen von Teilnehmern ein wichtiges kulturelles Gut.
+Sie sind eine Quelle des Glück, der Freude und bieten einen Platz an dem der menschliche Geist wachsen kann.
+Umso schrecklicher ist es anzusehen, wenn diese Freude in Schaden mündet und unsere Verlangen noch Verbundenheit diese für immer zerstört.
+Wir müssen aus vergangenen Fehlern lernen, ihren Ursprung ergründen und zukünftige Unfälle durch präventive Maßnahmen verhindern.
+Deshalb studieren wir mittels mikroskopischer Personenstromsimulationen menschliches Verhalten.
+Heute benötigen wir Echtzeitsimulationen um die Entwicklung einer anhaltenden Großveranstaltung vorherzusagen.
+Zudem helfen uns effiziente Simulationen die aufkommenden datengetriebenen Methoden in unseren Forschungsbereich zu integrieren.
+Doch sind mikroskopische Simulationen rechenintensiv und um Skalierbarkeit zu erzielen braucht es Parallelität.
+
+In dieser Arbeit folge ich dem Ruf nach effizienten und skalierbaren Simulationen.
+Hierzu analysiere ich existierende Algorithmen und stelle neue parallele Algorithmen vor.
+Ich parallelisiere eine ganze Klasse von Personenstrommodellen, nämlich die sogenannten Optimal Steps Modelle.
+Ich zeige, dass die Simulation von einer halben Millionen Teilnehmern in Echtzeit möglich ist.
+Zusätzlich entwickle ich effiziente und parallele Algorithmen zur Konstruktion von Navigationsfeldern.
+Sie sind eine robuste Technik um die Wegfindung von Fußgängern zu modellieren. 
+Ein neuer Algorithmus zur Gittererzeugung reduziert die zu lösende Problemgröße und eine neue numerische Methode nutzt Ähnlichkeiten in den aufeinanderfolgend zu lösenden Eikonalgleichungen.
+In Kombination werden Echtzeitberechnungen von dynamischen Navigationsfeldern für viele großskalige Simulationsszenarien ermöglicht.
+}
+
+\newcommand{\longAbstractEng}{
+The understanding and prevention of catastrophes at large-scale events are of utmost societal importance. 
+For that, pedestrian simulation has proven to be a potent tool.
+Using microscopic pedestrian simulations, researchers and practitioners investigate the mechanisms and preconditions that lead to dangerous situations such as harmful crowd pressures.
+Simulations reveal the behaviors and characteristics of human crowds and suggest practical ways to prevent catastrophes.
+
+However, microscopic pedestrian simulations are computationally expensive.
+Yet, it is necessary to model each individual to predict crucial phenomena.
+Despite their computational cost, real-time simulations are required to make reliable predictions during ongoing events and to enhance a research field that integrates more and more data-driven methods.
+To achieve this temporal requirement, we have to introduce and exploit parallelism efficiently.
+
+In this thesis, I follow the call for efficient and scalable simulations by analyzing existing and introducing new parallel algorithms.
+At first, I give an overview of microscopic models and navigation fields -- a common technique many models employ.
+I identify \OSMs{} to be especially important since their foundation is motivated by social psychology and biomechanics.
+I then discuss the relation between parallelism and the behavior of individuals within a large crowd.
+Instead of enforcing parallelism by compromising the models, I exploit its natural occurrence.
+My \textsc{ParallelEventDrivenUpdate} introduces parallelism into \OSMs{} without changing their definition.
+I analyze and use the parallelism defined by the models and show that we can simulate up to half a million agents in real-time on affordable off-the-shelf graphics processing units (GPUs).
+In the last part of my thesis, I focus on efficient navigation field computation.
+In other words, I focus on efficient methods to solve (multiple) eikonal equations.
+Navigation fields realize robust wayfinding to facilitate simulations with complex and large geometries.
+First, I enter the area of computational geometry and consider different space discretizations.
+I then develop \eikmesh{}, a new meshing algorithm for high-quality unstructured two-dimensional unstructured triangular meshes.
+The size of the underlying mesh directly influences the time complexity of numerical solvers.
+Therefore, \eikmesh{} constructs a mesh with a localized resolution.
+Besides reducing the problem size, I develop the \textsc{InformedFastIterativeMethod}, a novel numerical method that exploits consecutive solved eikonal equations.
+It is suitable to efficiently compute dynamic navigation fields and might be the source of new numerical methods to solve the eikonal equation in general.
+%
+%I introduce parallelism to a class of microscopic models, \ie{}, \OSMs{} and show that real-time simulations of half a million participants is possible.
+%In addition, I develop efficient and parallel algorithms to construct navigation fields -- a robust technique to model the wayfinding of pedestrians.
+%A new meshing algorithms reduces the problem size and a noval numerical method exploits similarities of consecutive solved eikonal equations.
+%In combination real-time dynamic navigation field computation becomes possible for many large-scale scenarios.
+}
+
+\newcommand{\longAbstractEngB}{
+Human beings are social creatures longing for deep emotional connections.
+%We find expressions of this basic human need across different cultures.
+Today, large-scale events with millions of participantsa are a manifestation of this desire.
+In an ever more connected world, they are culturally significant and offer joy, happiness, and a place where the human spirit can grow. 
+It is crushing when things go wrong, and joy turns into harm – when our belonging for connection destroys them forever.
+We must learn from accidents of the past, find their cause, and develop mechanisms to prevent them in the future.
+Therefore, we study the behavior of humans, their decision-making, and motion.
+Computer simulations are an essential part of this effort.
+They enable researchers and practitioners to analyze, plan, and manage large-scale events.
+
+Microscopic pedestrian simulations are computationally expensive, but it is necessary to model each individual to observe crucial phenomena. 
+Today, real-time simulations are required to predict the future of an ongoing event and to enhance a research field that integrates more and more data-driven methods.
+In this thesis, I follow this call by analyzing existing and introducing new efficient parallel algorithms to enable large-scale microscopic pedestrian simulations.
+
+At first, I give an overview of microscopic models and a critical technique they are based on, that is, navigation fields.
+I identify \OSMs{} to be especially important since their foundation is motivated by social psychology and biomechanics.
+I then discuss the relation between parallelism and the behavior of individuals within a large crowd.
+Instead of enforcing parallelism by compromising the models, I exploit its natural occurrence.
+My \textsc{ParallelEventDrivenUpdate} introduces parallelism into \OSMs{} without changing their definition.
+I analyze and use the parallelism defined by the models and show that we can simulate up to half a million agents in real-time on affordable off-the-shelf graphics processing units (GPUs).
+In the last part of my thesis, I focus on efficient navigation field computation.
+In other words, I focus on efficient methods to solve (multiple) eikonal equations.
+Navigation fields realize robust wayfinding to facilitate simulations with complex and large geometries.
+First, I enter the area of computational geometry and consider different space discretization.
+I then develop \eikmesh{}, a new meshing algorithm for high-quality unstructured $2$-d unstructured triangular meshes.
+The size of the underlying mesh directly influences the time complexity of numerical solvers.
+Therefore, \eikmesh{} constructs a mesh with a localized resolution.
+Besides reducing the problem size, I develop \textsc{InformedFastIterativeMethod}, a novel numerical method that exploits consecutive solved eikonal equations.
+It is suitable to efficiently compute dynamic navigation fields and might be the source of new numerical methods to solve the eikonal equation in general.
+}
+
+\newcommand{\longAbstractGer}{
+Als soziale Wesen streben wir Menschen nach tief emotionalen Verbindungen.
+%Ausdrücke dieses Grundbedürfnisses finden sich in verschiedenen Kulturen.
+Heute manifestiert sich dieses Verlangen durch Großveranstaltungen mit Millionen von Teilnehmern.
+In einer immer kleiner werdenden Welt, sind Sie ein kulturelles Gut und eine Quelle des Glück, der Freude und ein Platz an dem der menschliche Geist wachsen kann.
+Umso schrecklicher ist es, wenn diese Freude in Schaden mündet und unsere Verlangen noch Verbundenheit diese für immer zerstört.
+Wir müssen aus vergangenen Fehlern lernen, ihren Ursprung ergründen und zukünftige Unfälle durch präventive Maßnahmen verhindern.
+Deshalb studieren wir mittels mikroskopischer Personenstromsimulationen menschliches Verhalten.
+Sie ermöglichen es Forschern und Anwendern aus der Praxis Großveranstaltungen zu analysieren, zu planen und besser zu lenken. 
+
+Mikroskopische Personenstromsimulationen sind rechenintensiv, doch ist die Mo\-del\-lier\-ung von einzelnen Individuen notwendig um kritische Phenomene beobachten zu können.
+Heute benötigen wir Echtzeitsimulationen, um die Zukunft ablaufender Großveranstaltungen vorherzusagen und die aufkommenden datengetriebene Methoden für uns nutzbar zu machen.
+In dieser Arbeit folge ich diesem Ruf.
+Ich analysiere existierende und entwickle neuer effizienter paralleler Algorithmen die großskalige Echzeitsimulationen ermöglichen.
+
+Zunächst gebe ich einen Überblick über mikroskopische Personenstrommodelle sowie die Modellierung der Wegfindung durch Navigationsfelder.
+Da Optimal Steps Modelle sich auf Erkenntnissen aus der Psychologie und der Biomechanik gründen, identifiziere ich sie als besonders wichtig.
+Ich diskutiere den Zusammenhang zwischen Parallelität und dem Verhalten der Individuen innerhalb großer Menschenmengen.
+Anstatt Parallelität durch Kompromittierung der Modelle zu erzwingen, nutze dessen natürliches Vorkommen.
+\textsc{ParallelEventDrivenUpdate} parallelisiert Optimal Steps Modelle ohne dabei Änderungen an den Modellen vorzunehmen.
+Ich analysiere und nutze die Parallelität des bestehenden Modells und zeige dass Echzeitsimulationen mit bis zu einer halben Millionen Agenten auf gängigen Grafikkarten möglich sind.
+Im letzten Teil meiner Arbeit, konzentriere ich mich auf die effiziente Berechnung der Navigationsfelder.
+In anderen Worten, ich konzentriere mich auf effiziente Methoden um (mehrere) Eikonalgleichungen zu lösen.
+Navigationsfelder realisieren eine robuste Wegfindung um Simulationen in einer geometrisch komplexen Umgebung zu ermöglichen.
+Zu allererst betrete ich den Bereich der algorithmischen Geometrie und betrachte unterschiedliche Raumdiskretisierungen.
+Danach entwickle ich \eikmesh{}, einen neuen Gittergenerierungsalgorithmus für qualititiv hochwertige unstrukturierte zweidimensionale Dreieckgitter.
+Da die Gittergröße sich direkt auf die Laufzeit numerischer Verfahren auswirkt, konstruiert \eikmesh{} ein Gitter mit lokalisierter Gitterauflösung.
+Neben der Reduzierung der Problemgröße nutzt \textsc{InformedFastIterativeMethod} die Ähnlichkeit der aufeinanderfolgend zu lösenden Eikonalgleichungen ausnutzt. Dieses neue Verfahren eignet sich zur effizienten Berechnung dynamischer Navigationsfelder und ist möglicherweise die Quelle weiterer numerischer Methoden zur Lösung der Eikonalgleichung.
+}
+%\tikzstyle{every node}=[circle, draw, fill=black!50, inner sep=0pt, minimum width=4pt].palenta@tum.de
