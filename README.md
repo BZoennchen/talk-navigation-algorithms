@@ -1,6 +1,6 @@
 # Algorithms for Navigation
 
-This is the content of a talk about three algorithms to for navigation:
+This is the content of a talk about three algorithms for navigation:
 
 1. Dijkstra's algorithm
 2. A*
