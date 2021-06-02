@@ -42,9 +42,8 @@
  \titlepage
 \end{frame}
 
-\section{Problemstellung}
 \begin{frame}
-	\frametitle{Navigation im $\mathbb{R}^2$}
+	\frametitle{Problemstellung}
 	\begin{figure}
 		\centering
 		\includegraphics[width=0.4\textwidth]{./figs/wayfinding.pdf}
@@ -52,7 +51,7 @@
 \end{frame}
 
 \begin{frame}
-	\frametitle{Navigation im $\mathbb{R}^2$}
+	\frametitle{Problemstellung}
 	Sei
 	\begin{equation*}
 		d_{\osmDestination}(\xx) = \min_{\yy \in \osmDestination} \Vert \xx - \yy \Vert
@@ -67,6 +66,17 @@
 	\end{figure}
 \end{frame}
 
+\begin{frame}
+	\frametitle{Inhalt}
+	{
+	\Large
+	\begin{enumerate}[label=(\arabic*)]
+		\item Dijkstra's Algorithmus
+		\item A$^*$
+		\item Die Fast Marching Method
+	\end{enumerate}
+	}
+\end{frame}
 
 \begin{frame}[plain]
 	\begin{center}
@@ -130,10 +140,10 @@
 	\frametitle{Navigation auf dem Gitter: Dijkstra's Algorithmus}
 	\textbf{Definitionen}: 
 	\begin{enumerate}[label=(\roman*)]
-		\uncover<2->{\item $\uu, \vvv$, Knoten des Gitters}
-		\uncover<3->{\item $d_{\osmDestination}(\uu)$, gesuchte Länge des kürzesten Wegs von $\uu$ nach $\osmDestination$}
-		\uncover<4->{\item $d(\uu, \vvv)$, Länge/Gewicht der Kante $(\uu, \vvv)$}
-		\uncover<5->{\item $\mathcal{Q}$, eine \textsc{PriorityQueue} (z.B. \textsc{FibonacciHeap})}
+		\item $\uu, \vvv$, Knoten des Gitters
+		\item $d_{\osmDestination}(\uu)$, gesuchte Länge des kürzesten Wegs von $\uu$ nach $\osmDestination$
+		\item $d(\uu, \vvv)$, Länge/Gewicht der Kante $(\uu, \vvv)$
+		\item $\mathcal{Q}$, eine \textsc{PriorityQueue} (z.B. \textsc{FibonacciHeap})
 	\end{enumerate}
 \end{frame}
 
@@ -175,13 +185,14 @@
 		}
 		\end{column}
 		\begin{column}{0.6\textwidth}
-			\uncover<2->{$\mathcal{Q}$ ist eine nach \alert{$d_{\osmDestination}(\vvv)$} sortierte \textsc{PriorityQueue}:  
+			\uncover<1->{$\mathcal{Q}$ ist eine nach \alert{$d_{\osmDestination}(\vvv)$} sortierte \textsc{PriorityQueue}:  
 			\begin{enumerate}[label=$\bullet$]
-				\item $\mathcal{Q}.\textsc{pop}()$, wirft das kleinste Element heraus 
-				\item und $\mathcal{Q}.\textsc{decrease}(\vvv, d_{\osmDestination}(\vvv))$ ändert ein Element ab.
+				\item $\mathcal{Q}.\textsc{pop}()$, wirft das kleinste Element heraus,
+				\item $\mathcal{Q}.\textsc{decrease}(\vvv, d_{\osmDestination}(\vvv))$ ändert ein Element ab, 
+				\item und $\mathcal{Q}.\textsc{push}(\vvv, d_{\osmDestination}(\vvv))$ fügt ein Element ein.
 			\end{enumerate}}
 			\vspace{1cm}
-			\uncover<3->{\textbf{Komplexität:} (einfacher Graph mit positiven Kosten und $n$ Knoten)
+			\uncover<2->{\textbf{Komplexität:} (einfacher Graph mit positiven Kosten und $n$ Knoten)
 			\begin{enumerate}[label=$\bullet$]
 				\item Zeit: $\mathcal{O}(n\log(n))$
 				\item Speicher: $\mathcal{O}(n)$
@@ -194,18 +205,18 @@
 
 \begin{frame}
 	\frametitle{Navigation auf dem Gitter: Dijkstra's Algorithmus}
-	\textbf{Strategie}: \textbf{Strategie}: Berechne kürzeste Wege von $\Gamma$ zu jedem Gitterpunkt $\uu \in \domain$ durch den \textsc{Dijkstra} \cite{dijkstra-1959}.\\
+	\textbf{Strategie}: Berechne kürzeste Wege von $\Gamma$ zu jedem Gitterpunkt $\uu \in \domain$ durch den \textsc{Dijkstra} \cite{dijkstra-1959}.\\
 	
 	\vspace{1cm}
 	
-	\textbf{Beobachtung}: Ist $\uu_0, \ldots, \uu_k$ der kürzeste Weg von $\uu_0$ nach $\uu_k$ und $\uu_k, \ldots, \uu_m$ der kürzeste Weg von $\uu_k$ nach $\uu_m$, dann ist
+	\textbf{Beobachtung}: Ist $\uu_0, \ldots, \uu_k, \ldots,\uu_m$ der kürzeste Weg von $\uu_0$ nach $\uu_m$, dann ist
 	\begin{equation*}
-		\uu_0, \ldots, \uu_m
+		\uu_0, \ldots, \uu_k
 	\end{equation*}
-	der kürzeste Weg von $\uu_0$ nach $\uu_m$.\\
+	der kürzeste Weg von $\uu_0$ nach $\uu_k$.\\
 	\vspace{1cm}
 	
-	\uncover<2->{\textbf{Invarianz}: Für alle $\uu \in \domain$, die nicht in $\mathcal{Q}$ enthalten sind, ist $d_{\osmDestination}(\uu)$ ist der kürzeste Pfad von $\uu$ nach $\osmDestination$. (Beweis über Induktion)}
+	\uncover<2->{\textbf{Invarianz}: Für alle $\uu \in \domain$, die aus $\mathcal{Q}$ gelöscht werden, ist $d_{\osmDestination}(\uu)$ die Länge des kürzesten Wegs von $\uu$ nach $\osmDestination$. (Beweis über Induktion)}
 \end{frame}
 
 \begin{frame}[plain]
@@ -216,7 +227,12 @@
 
 \begin{frame}
 	\frametitle{Navigation auf dem Gitter: A$^*$ Algorithmus}
-	\textbf{Strategie}: Berechne gerichtet/informiert die kürzesten Wege von $\Gamma$ zu Gitterpunkt $\uu \in \domain$. Spare dir unnötige Berechnungen (\textsc{A$^*$} \cite{hart-1968})\\
+	
+\end{frame}
+
+\begin{frame}
+	\frametitle{Navigation auf dem Gitter: A$^*$ Algorithmus}
+	\textbf{Strategie}: Berechne gerichtet/informiert die kürzesten Wege von $\Gamma$ zu Gitterpunkten $\uu \in \domain$. Spare dir unnötige Berechnungen (\textsc{A$^*$} \cite{hart-1968})\\
 	\vspace{1cm}
 	
 	\uncover<2->{\textbf{Beobachtung (1)}: Kein Weg $\uu_0, \ldots, \uu_m$ ist nicht kürzer als der euklidische Abstand zwischen $\uu_0$ und $\uu_m$, d.h. 
@@ -231,6 +247,17 @@
 \end{frame}
 
 \begin{frame}
+	\frametitle{Navigation auf dem Gitter: A$^*$ Algorithmus}
+	
+\end{frame}
+
+\begin{frame}
+	\frametitle{Navigation auf dem Gitter: A$^*$ Algorithmus}
+	
+\end{frame}
+
+
+\begin{frame}
 	\frametitle{Navigation auf dem Gitter: A$^*$ Algorithmus}	
 		\vspace{-0.5cm}
 		\begin{columns}
@@ -242,7 +269,7 @@
 		\end{column}
 		\hfill
 		\begin{column}{0.4\textwidth}
-			\uncover<2->{Sei 
+			\uncover<1->{Sei 
 			\begin{equation*}
 				h(\uu) = \min_{\vvv \in \osmDestination} \Vert \uu - \vvv \Vert,
 			\end{equation*}
@@ -254,7 +281,7 @@
 	\end{columns}
 	\vspace{0.5cm}
 	
-	\uncover<3->{\textbf{Beobachtung (2*)}: Aus 
+	\uncover<1->{\textbf{Beobachtung (2*)}: Aus 
 	\begin{equation*}
 		d_\osmDestination(\vvv) + h(\uu) - h(\vvv) > d_\osmDestination(\uu)
 	\end{equation*}
@@ -296,14 +323,14 @@
 		}
 		\end{column}
 		\begin{column}{0.6\textwidth}
-			\uncover<2->{$\mathcal{Q}$ ist eine nach \alert{$d_{\osmDestination}(\vvv) + h(\vvv)$} sortierte \textsc{PriorityQueue}:
+			\uncover<1->{$\mathcal{Q}$ ist eine nach \alert{$d_{\osmDestination}(\vvv) + h(\vvv)$} sortierte \textsc{PriorityQueue}:
 			\begin{enumerate}[label=$\bullet$]
 				\item $\mathcal{Q}.\textsc{pop}()$, wirft das kleinste Element heraus,
 				\item $\mathcal{Q}.\textsc{decrease}(\vvv, d_{\osmDestination}(\vvv))$ ändert ein Element ab, 
 				\item und $\mathcal{Q}.\textsc{push}(\vvv, d_{\osmDestination}(\vvv))$ fügt ein Element ein.
 			\end{enumerate}}
 			\vspace{1cm}
-			\uncover<3->{\textbf{Komplexität:} (einfacher Graph mit positiven Kosten und $n$ Knoten)
+			\uncover<2->{\textbf{Komplexität:} (einfacher Graph mit positiven Kosten und $n$ Knoten)
 			\begin{enumerate}[label=$\bullet$]
 				\item Zeit: $\mathcal{O}(n\log(n))$
 				\item Speicher: $\mathcal{O}(n)$
@@ -423,9 +450,9 @@
 \uncover<3->{\textbf{Bemerkungen:}}
 \begin{enumerate}[label=(\roman*)]
 	\uncover<3->{\item Hyperbolische partzielle Differenzialgleichung}
-	\uncover<4->{\item Randwertproblem ($T = 0 \text{ auf } \osmDestination$)}
-	\uncover<5->{\item Für die Viskositätslösung muss $T$ nicht überall differenzierbar sein}
-	\uncover<6->{\item Gilt $f = 1$, so ist $T$ die \textbf{geodätische Distanz}.}
+	\uncover<3->{\item Randwertproblem ($T = 0 \text{ auf } \osmDestination$)}
+	\uncover<3->{\item Für die Viskositätslösung muss $T$ nicht überall differenzierbar sein}
+	\uncover<3->{\item Gilt $f = 1$, so ist $T$ die \textbf{geodätische Distanz}.}
 \end{enumerate}
 \end{frame}
 
@@ -448,8 +475,8 @@
 	Jeder Gitterpunkt gehört zu genau einer der folgenden Mengen:
 	\begin{enumerate}[label=(\roman*)]
 		\uncover<2->{\item \textit{unerreicht}: 'Die Wellenfront ist noch nicht angekommen'}
-		\uncover<3->{\item \textit{erreicht}: 'Die Wellenfront ist gerade hier'}
-		\uncover<4->{\item \textit{verlassen}: 'Die Wellenfront hat den Punkt verlassen'}
+		\uncover<2->{\item \textit{erreicht}: 'Die Wellenfront ist gerade hier'}
+		\uncover<2->{\item \textit{verlassen}: 'Die Wellenfront hat den Punkt verlassen'}
 	\end{enumerate}
 	\begin{figure}
 		\subfigure{\includegraphics[width=0.23\textwidth]{./figs/chicken-fmm-1.pdf}}
@@ -494,7 +521,7 @@
 		\end{column}
 	\end{columns}
 	\vspace{0.5cm}
-	\uncover<3->{Wüsten wir, dass die Welle von unten rechts kommt bräuchten wir nur 
+	\uncover<3->{Wüssten wir, dass die Welle von unten rechts kommt bräuchten wir nur 
 	\begin{equation*}
 		D^{+ x}_{i,j}\uu = \frac{
 			T(\uu_{i + 1,j}) - { \color{myblue} T(\uu_{i,j})} }{+ \Delta x} \text{ und } D^{- y}_{i,j}\uu = \frac{
@@ -584,12 +611,12 @@
 	\end{equation}
 	ergibt sich
 	\begin{equation}
-		(D^{\pm x}_{i,j})'\uu \approx \frac{T(\uu_{i \pm 2,j}) - 2T(\uu_{i \pm 2,j}) - {\color{myblue} T(\uu_{i,j})} }{\pm (\Delta x)^2}.
+		(D^{\pm x}_{i,j})'\uu \approx \frac{T(\uu_{i \pm 2,j}) - 2T(\uu_{i \pm 2,j}) + {\color{myblue} T(\uu_{i,j})} }{\pm (\Delta x)^2}.
 	\end{equation}}
 	\uncover<4->{Somit ist 
 	\begin{equation*}
 			\frac{\partial T(\uu_{i,j}) }{\partial x} \approx D^{\pm 2x}_{i,j}\uu = \frac{
-			T(\uu_{i \pm 1,j}) - {\color{myblue} T(\uu_{i,j})} }{\pm \Delta x} + \frac{\Delta x}{2} \frac{T(\uu_{i \pm 2,j})-2 T(\uu_{i \pm 1,j}) - {\color{myblue} T(\uu_{i,j})} }{\pm (\Delta x)^2}
+			T(\uu_{i \pm 1,j}) - {\color{myblue} T(\uu_{i,j})} }{\pm \Delta x} - \frac{\Delta x}{2} \frac{T(\uu_{i \pm 2,j})-2 T(\uu_{i \pm 1,j}) + {\color{myblue} T(\uu_{i,j})} }{\pm (\Delta x)^2}
 	\end{equation*}}
 \end{frame}
 
@@ -599,20 +626,20 @@
 	\begin{equation*}
 		\begin{split}
 		\frac{\partial T(\uu_{i,j}) }{\partial x} \approx D^{\pm 2x}_{i,j}\uu &= \frac{
-			T(\uu_{i \pm 1,j}) - {\color{myblue} T(\uu_{i,j})} }{\pm \Delta x} + \frac{\Delta x}{2} \frac{T(\uu_{i \pm 2,j})-2 T(\uu_{i \pm 1,j}) - {\color{myblue} T(\uu_{i,j})} }{\pm (\Delta x)^2} \\
-		&=  \frac{2T(\uu_{i \pm 1,j}) - {\color{myblue} 2T(\uu_{i,j})} }{\pm 2\Delta x} + \frac{T(\uu_{i \pm 2,j})-2 T(\uu_{i \pm 1,j}) - {\color{myblue} T(\uu_{i,j})} }{\pm 2 \Delta x} \\
-		&=  \frac{T(\uu_{i \pm 2,j})- 4 T(\uu_{i \pm 1,j}) - 3{\color{myblue} T(\uu_{i,j})} }{\pm 2 \Delta x}.
+			T(\uu_{i \pm 1,j}) - {\color{myblue} T(\uu_{i,j})} }{\pm \Delta x} - \frac{\Delta x}{2} \frac{T(\uu_{i \pm 2,j})-2 T(\uu_{i \pm 1,j}) + {\color{myblue} T(\uu_{i,j})} }{\pm (\Delta x)^2} \\
+		&=  \frac{2T(\uu_{i \pm 1,j}) - {\color{myblue} 2T(\uu_{i,j})} }{\pm 2\Delta x} - \frac{T(\uu_{i \pm 2,j})-2 T(\uu_{i \pm 1,j}) + {\color{myblue} T(\uu_{i,j})} }{\pm 2 \Delta x} \\
+		&=  \frac{-T(\uu_{i \pm 2,j}) + 4 T(\uu_{i \pm 1,j}) - 3{\color{myblue} T(\uu_{i,j})} }{\pm 2 \Delta x}.
 		\end{split}
 	\end{equation*}
 	Und in $y$-Richtung ebenso:
 	\begin{equation*}
-		\frac{\partial T(\uu_{i,j}) }{\partial y} \approx D^{\pm 2y}_{i,j}\uu =  \frac{T(\uu_{i,j\pm 2})- 4 T(\uu_{i,j\pm 1}) - 3{\color{myblue} T(\uu_{i,j})} }{\pm 2 \Delta y}.
+		\frac{\partial T(\uu_{i,j}) }{\partial y} \approx D^{\pm 2y}_{i,j}\uu =  \frac{- T(\uu_{i,j\pm 2}) + 4 T(\uu_{i,j\pm 1}) - 3{\color{myblue} T(\uu_{i,j})} }{\pm 2 \Delta y}.
 	\end{equation*}
 \end{frame}
 
 \begin{frame}
-	\frametitle{Navigation im $\mathbb{R}^2$}
-	Wir noch immer eine quadratische Gleichung:
+	\frametitle{Navigation im $\mathbb{R}^2$:  Lokale Lösung}
+	Wir lösen noch immer eine quadratische Gleichung:
 	\begin{equation} \label{eq:lokal:eikonal:1}
 		\max\left\{ D_{i,j}^{-2x}\uu, -D_{i,j}^{+2x}\uu \right\}^2 + \max\left\{D_{i,j}^{-2y}\uu, -D_{i,j}^{+2y}\uu \right\}^2 = f(\uu_{i,j})^{-2}.
 	\end{equation}\\
@@ -725,8 +752,8 @@
 	Zum Beispiel, sei $d_W(\xx)$ die Euklidische Distanz zum nächstliegenden Hindernis/Wand, dann könnte sich
 	\begin{equation*}
 			f(\xx) = \begin{cases}
-				1 / (2-(d_W(\xx)/ \delta_{W})) & \quad \text{if } d_W(\xx) < \delta_{W} \\
-				1  & \quad \text{else}.
+				1 / (2-(d_W(\xx)/ \delta_{W})) & \quad \text{falls } d_W(\xx) < \delta_{W} \\
+				1  & \quad \text{sonst}.
 			\end{cases}
 	\end{equation*}
 	eignen.
