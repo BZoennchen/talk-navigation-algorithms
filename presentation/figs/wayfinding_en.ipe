@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <!DOCTYPE ipe SYSTEM "ipe.dtd">
 <ipe version="70218" creator="Ipe 7.2.29">
-<info created="D:20200628172232" modified="D:20240611091815"/>
+<info created="D:20200628172232" modified="D:20240611092012"/>
 <preamble>\usepackage{libertine}
 \usepackage[libertine]{newtxmath}</preamble>
 <ipestyle name="basic">
@@ -262,11 +262,82 @@ h
 <page>
 <layer name="alpha"/>
 <view layers="alpha" active="alpha"/>
-<use layer="alpha" name="mark/disk(sx)" pos="176 752" size="normal" stroke="black"/>
-<use name="mark/disk(sx)" pos="176 768" size="normal" stroke="darkgray"/>
-<use name="mark/disk(sx)" pos="160 752" size="normal" stroke="darkgray"/>
-<use name="mark/disk(sx)" pos="176 736" size="normal" stroke="darkgray"/>
-<use name="mark/disk(sx)" pos="192 752" size="normal" stroke="darkgray"/>
-<text matrix="1 0 0 1 0 -4" transformations="translations" pos="172 748" stroke="black" type="label" width="5.479" height="4.388" depth="0.11" valign="baseline" style="math">\mathbf{u}</text>
+<path layer="alpha" stroke="sborange" fill="sborange">
+224 760 m
+224 752 l
+240 752 l
+240 760 l
+h
+</path>
+<path stroke="sbred" pen="1">
+160 744 m
+180 760
+200 764
+208 764
+216 760
+228 756 c
+</path>
+<path matrix="1 0 0 1 80 16" stroke="verydarkgray" fill="verydarkgray">
+80 744 m
+80 736 l
+84 736 l
+84 744 l
+h
+</path>
+<path matrix="1 0 0 1 80 16" stroke="verydarkgray" fill="verydarkgray">
+100 760 m
+100 752 l
+112 752 l
+112 760 l
+h
+</path>
+<path matrix="1 0 0 1 80 16" stroke="verydarkgray" fill="verydarkgray">
+116 744 m
+116 736 l
+128 736 l
+128 744 l
+h
+</path>
+<path matrix="1 0 0 1 80 16" stroke="verydarkgray" fill="verydarkgray">
+76 764 m
+76 756 l
+88 756 l
+88 764 l
+h
+</path>
+<path matrix="1 0 0 1 80 16" stroke="verydarkgray" fill="verydarkgray">
+96 736 m
+96 728 l
+108 728 l
+108 736 l
+h
+</path>
+<path matrix="1 0 0 1 80 20" stroke="verydarkgray" fill="verydarkgray">
+136 764 m
+136 744 l
+144 744 l
+144 764 l
+h
+</path>
+<path matrix="1 0 0 1 80 12" stroke="verydarkgray" fill="verydarkgray">
+136 736 m
+136 724 l
+144 724 l
+144 736 l
+h
+</path>
+<use matrix="1 0 0 1 80 16" name="mark/disk(sx)" pos="80 728" size="4" stroke="sbblue"/>
+<text matrix="1 0 0 1 -12 0" transformations="translations" pos="156 736" stroke="black" type="label" width="31.422" height="2.613" depth="0.94" valign="baseline" size="4">Agent at position $\mathbf{u}$</text>
+<text matrix="1 0 0 1 -19.8887 0.521431" transformations="translations" pos="244 760" stroke="black" type="label" width="13.736" height="2.613" depth="0.94" valign="baseline" size="4">Target $\Gamma$</text>
+<text matrix="1 0 0 1 -16 0" transformations="translations" pos="168 788" stroke="black" type="label" width="4.902" height="4.225" depth="0" valign="baseline" size="6" style="math">\Omega</text>
+<text transformations="translations" pos="204 792" stroke="black" type="label" width="15.49" height="2.8" depth="0.04" valign="baseline" size="4">Obstacles</text>
+<path stroke="black" fill="black" arrow="ptarc/tiny">
+211.478 788.454 m
+188.448 778.425 l
+</path>
+<path stroke="black" fill="black" arrow="ptarc/tiny">
+215.639 789.008 m
+220.728 784.381 l
+</path>
 </page>
 </ipe>
